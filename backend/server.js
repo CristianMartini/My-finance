@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
+const cors = require('cors');
 
 const app = express();
 
@@ -9,16 +10,24 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Importar rotas
-const testRoutes = require('./routes/testRoutes');
+const authRoutes = require('./routes/authRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
 
-// Usar rotas com prefixo /api
-app.use('/api', testRoutes);
+// Importar middleware
+const authMiddleware = require('./middlewares/authMiddleware');
 
-// Rota de teste direta
-app.get('/hello', (req, res) => {
-  res.send('Olá, mundo!');
+// Rotas de Autenticação
+app.use('/api/auth', authRoutes);
+
+// Rotas de Transações (protegidas pelo middleware de autenticação)
+app.use('/api/transactions', authMiddleware, transactionRoutes);
+
+// Rota padrão
+app.get('/', (req, res) => {
+  res.send('API está funcionando!');
 });
 
 const PORT = process.env.PORT || 5000;
