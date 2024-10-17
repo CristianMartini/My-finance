@@ -10,7 +10,14 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+
+// Configurar CORS
+const corsOptions = {
+  origin: 'http://localhost:5173', // Altere para o endereço do seu front-end
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Importar rotas
 const authRoutes = require('./routes/authRoutes');

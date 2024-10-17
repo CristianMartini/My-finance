@@ -1,3 +1,5 @@
+
+//controllers\authController.js
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
@@ -58,6 +60,25 @@ exports.login = async (req, res) => {
     res.status(200).json({
       message: 'Login realizado com sucesso',
       token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro no servidor' });
+  }
+  
+};
+exports.me = async (req, res) => {
+  try {
+    // O middleware de autenticação já adiciona o usuário em req.user
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+    res.status(200).json({
       user: {
         id: user._id,
         name: user.name,
