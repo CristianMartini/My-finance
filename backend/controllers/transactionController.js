@@ -1,8 +1,9 @@
 //controllers\transactionController.js
-
+// controllers/transactionController.js
 
 const Transaction = require('../models/Transaction');
 
+// Criar Transação
 exports.createTransaction = async (req, res) => {
   const {
     category,
@@ -42,49 +43,18 @@ exports.createTransaction = async (req, res) => {
     res.status(500).json({ error: 'Erro no servidor' });
   }
 };
-exports.updateTransaction = async (req, res) => {
-  const { id } = req.params;
-  const {
-    category,
-    subCategory,
-    type,
-    amount,
-    date,
-    description,
-    source,
-    isParcelado,
-    parcelas,
-    notes,
-  } = req.body;
 
+// Obter Todas as Transações
+exports.getTransactions = async (req, res) => {
   try {
-    let transaction = await Transaction.findOne({ _id: id, user: req.user._id });
-
-    if (!transaction) {
-      return res.status(404).json({ error: 'Transação não encontrada' });
-    }
-
-    transaction.category = category || transaction.category;
-    transaction.subCategory = subCategory || transaction.subCategory;
-    transaction.type = type || transaction.type;
-    transaction.amount = amount || transaction.amount;
-    transaction.date = date || transaction.date;
-    transaction.description = description || transaction.description;
-    transaction.source = source || transaction.source;
-    transaction.isParcelado = isParcelado !== undefined ? isParcelado : transaction.isParcelado;
-    transaction.parcelas = parcelas || transaction.parcelas;
-    transaction.notes = notes || transaction.notes;
-
-    await transaction.save();
-
-    res.status(200).json({
-      message: 'Transação atualizada com sucesso',
-      transaction,
-    });
+    const transactions = await Transaction.find({ user: req.user._id }).sort({ date: -1 });
+    res.status(200).json(transactions);
   } catch (error) {
     res.status(500).json({ error: 'Erro no servidor' });
   }
 };
+
+// Obter Transação por ID
 exports.getTransaction = async (req, res) => {
   const { id } = req.params;
 
@@ -101,15 +71,54 @@ exports.getTransaction = async (req, res) => {
   }
 };
 
-exports.getTransactions = async (req, res) => {
+// Atualizar Transação
+exports.updateTransaction = async (req, res) => {
+  const { id } = req.params;
+  const {
+    category,
+    subCategory,
+    type,
+    amount,
+    date,
+    description,
+    source,
+    isParcelado,
+    parcelas,
+    notes,
+  } = req.body;
+
   try {
-    const transactions = await Transaction.find({ user: req.user._id }).sort({ date: -1 });
-    res.status(200).json(transactions);
+    const transaction = await Transaction.findOneAndUpdate(
+      { _id: id, user: req.user._id },
+      {
+        category,
+        subCategory,
+        type,
+        amount,
+        date,
+        description,
+        source,
+        isParcelado,
+        parcelas,
+        notes,
+      },
+      { new: true }
+    );
+
+    if (!transaction) {
+      return res.status(404).json({ error: 'Transação não encontrada' });
+    }
+
+    res.status(200).json({
+      message: 'Transação atualizada com sucesso',
+      transaction,
+    });
   } catch (error) {
     res.status(500).json({ error: 'Erro no servidor' });
   }
 };
 
+// Deletar Transação
 exports.deleteTransaction = async (req, res) => {
   const { id } = req.params;
 
