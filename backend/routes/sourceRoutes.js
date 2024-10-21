@@ -13,4 +13,8 @@ router.post('/', sourceController.createSource);
 // Listar fontes do usuário
 router.get('/', sourceController.getSources);
 
+// Deletar fonte
+router.delete('/:id', authMiddleware, sourceController.deleteSource);
+
+
 module.exports = router;

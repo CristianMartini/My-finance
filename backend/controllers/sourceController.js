@@ -24,3 +24,19 @@ exports.getSources = async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar as fontes' });
   }
 };
+// Deletar fonte
+exports.deleteSource = async (req, res) => {
+    const { id } = req.params; // Usar o ID para identificar a fonte a ser deletada
+    const userId = req.user._id; // ID do usuário autenticado
+  
+    try {
+      const source = await Source.findOneAndDelete({ _id: id, user: userId }); // Deleta a fonte pelo ID
+      if (!source) {
+        return res.status(404).json({ error: 'Fonte não encontrada' });
+      }
+      res.status(200).json({ message: 'Fonte deletada com sucesso' });
+    } catch (error) {
+      res.status(500).json({ error: 'Erro ao deletar a fonte' });
+    }
+  };
+  
