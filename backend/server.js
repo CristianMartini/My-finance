@@ -22,17 +22,21 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Importar rotas
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./routes/authRoutes'); // Mantenha esta
 const transactionRoutes = require('./routes/transactionRoutes');
+const sourceRoutes = require('./routes/sourceRoutes'); // Importar as rotas de fontes
 
 // Importar middleware
 const authMiddleware = require('./middlewares/authMiddleware');
 
 // Rotas de Autenticação
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes); // Aqui você utiliza authRoutes uma vez
 
 // Rotas de Transações (protegidas pelo middleware de autenticação)
 app.use('/api/transactions', authMiddleware, transactionRoutes);
+
+// Rotas de Fontes (protegidas pelo middleware de autenticação)
+app.use('/api/sources', sourceRoutes); // Usar as rotas de fontes
 
 // Rota padrão
 app.get('/', (req, res) => {
