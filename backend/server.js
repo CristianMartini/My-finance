@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Configurar CORS
 const corsOptions = {
-  origin: 'http://localhost:5173', // Altere para o endereço do seu front-end
+  origin: ['http://localhost:5173', 'https://my-finance-hazel.vercel.app/'], // Altere para o endereço do seu front-end
   credentials: true,
 };
 
