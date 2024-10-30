@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 const express = require('express');
-const connectDB = require('./config/db');
+const connectDB = require('./src/config/db');
 const cors = require('cors');
 
 const app = express();
@@ -15,19 +15,19 @@ app.use(express.json());
 
 // Configurar CORS
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://my-finance-hazel.vercel.app/'], // Altere para o endereço do seu front-end
+  origin: ['http://localhost:5173', 'https://backend-kohl-pi-41.vercel.app/ver'], // Altere para o endereço do seu front-end
   credentials: true,
 };
 
 app.use(cors(corsOptions));
 
 // Importar rotas
-const authRoutes = require('./routes/authRoutes'); // Mantenha esta
-const transactionRoutes = require('./routes/transactionRoutes');
-const sourceRoutes = require('./routes/sourceRoutes'); // Importar as rotas de fontes
+const authRoutes = require('./src/routes/authRoutes'); // Mantenha esta
+const transactionRoutes = require('./src/routes/transactionRoutes');
+const sourceRoutes = require('./src/routes/sourceRoutes'); // Importar as rotas de fontes
 
 // Importar middleware
-const authMiddleware = require('./middlewares/authMiddleware');
+const authMiddleware = require('./src/middlewares/authMiddleware');
 
 // Rotas de Autenticação
 app.use('/api/auth', authRoutes); // Aqui você utiliza authRoutes uma vez
